@@ -1,0 +1,15 @@
+LICENSE
+MANIFEST
+META.yml
+Makefile.PL
+README
+dist.ini
+lib/MooseX/Aliases.pm
+lib/MooseX/Aliases/Meta/Trait/Attribute.pm
+lib/MooseX/Aliases/Meta/Trait/Method.pm
+t/000-load.t
+t/001-basic.t
+t/002-attributes.t
+t/003-roles.t
+t/004-traits.t
+t/005-mop.t
