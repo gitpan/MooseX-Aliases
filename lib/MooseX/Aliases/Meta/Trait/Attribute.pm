@@ -1,5 +1,5 @@
 package MooseX::Aliases::Meta::Trait::Attribute;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Moose::Role;
 use Moose::Util::TypeConstraints;
@@ -11,7 +11,7 @@ MooseX::Aliases::Meta::Trait::Attribute - attribute metaclass trait for L<MooseX
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 SYNOPSIS
 
@@ -43,6 +43,7 @@ has alias => (
     isa        => 'MooseX::Aliases::ArrayRef',
     auto_deref => 1,
     coerce     => 1,
+    predicate  => 'has_alias',
 );
 
 after install_accessors => sub {
@@ -61,13 +62,41 @@ after install_accessors => sub {
     }
 };
 
+around initialize_instance_slot => sub {
+    my $orig = shift;
+    my $self = shift;
+    my ($meta_instance, $instance, $params) = @_;
+
+    return $self->$orig(@_)
+        # don't run if we haven't set any aliases
+        unless $self->has_alias
+            # don't run if init_arg is explicitly undef
+            && (!$self->has_init_arg || defined $self->init_arg);
+
+    if (my @aliases = grep { exists $params->{$_} } @{ $self->alias }) {
+        if ($self->has_init_arg and exists $params->{ $self->init_arg }) {
+            push @aliases, $self->init_arg;
+        }
+
+        $self->associated_metaclass->throw_error(
+            'Conflicting init_args: (' . join(', ', @aliases) . ')'
+        ) if @aliases > 1;
+
+        $params->{ $self->init_arg } = delete $params->{ $aliases[0] };
+    }
+
+    $self->$orig(@_);
+};
+
 no Moose::Role;
 
-=head1 AUTHOR
+=head1 AUTHORS
 
   Jesse Luehrs <doy at tozt dot net>
 
   Chris Prather (chris@prather.org)
+
+  Justin Hunter <justin.d.hunter at gmail dot com>
 
 =head1 COPYRIGHT AND LICENSE
 

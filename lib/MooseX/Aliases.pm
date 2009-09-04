@@ -1,5 +1,5 @@
 package MooseX::Aliases;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Moose ();
 use Moose::Exporter;
@@ -12,7 +12,7 @@ MooseX::Aliases - easy aliasing of methods and attributes in Moose
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 SYNOPSIS
 
@@ -52,7 +52,8 @@ or
 
 The MooseX::Aliases module will allow you to quickly alias methods in Moose.
 It provides an alias parameter for has() to generate aliased accessors as well
-as the standard ones.
+as the standard ones. Attributes can also be initialized in the constructor via
+their aliased names.
 
 =cut
 
@@ -109,17 +110,6 @@ sub init_meta {
     return Class::MOP::class_of($options{for_class});
 }
 
-=head1 TODO
-
-=over 4
-
-=item * Subsume MooseX::MultiInitArgs, make it so that init_arg can take an ArrayRef
-    has foo => (
-        init_arg => [qw(foo bar baz)],
-    )
-
-=back
-
 =head1 BUGS/CAVEATS
 
 Currently, to use MooseX::Aliased in a role, you will need to explicitly
@@ -163,11 +153,13 @@ L<http://search.cpan.org/dist/MooseX-Aliases>
 
 =back
 
-=head1 AUTHOR
+=head1 AUTHORS
 
   Jesse Luehrs <doy at tozt dot net>
 
   Chris Prather (chris@prather.org)
+
+  Justin Hunter <justin.d.hunter at gmail dot com>
 
 =head1 COPYRIGHT AND LICENSE
 

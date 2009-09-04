@@ -3,6 +3,7 @@ abstract: 'easy aliasing of methods and attributes in Moose'
 author:
   - 'Jesse Luehrs <doy at tozt dot net>'
   - 'Chris Prather <chris@prather.org>'
+  - 'Justin Hunter <justin.d.hunter at gmail dot com>'
 generated_by: 'Dist::Zilla::Plugin::MetaYAML version 1.091440'
 license: perl
 meta-spec:
@@ -11,4 +12,4 @@ meta-spec:
 name: MooseX-Aliases
 requires:
   Moose: 0.89
-version: 0.01
+version: 0.02

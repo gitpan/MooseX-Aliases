@@ -1,5 +1,5 @@
 package MooseX::Aliases::Meta::Trait::Method;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Moose::Role;
 
@@ -9,7 +9,7 @@ MooseX::Aliases::Meta::Trait::Method - method metaclass trait for L<MooseX::Alia
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 DESCRIPTION
 
@@ -34,11 +34,13 @@ has aliased_from => (
 
 no Moose::Role;
 
-=head1 AUTHOR
+=head1 AUTHORS
 
   Jesse Luehrs <doy at tozt dot net>
 
   Chris Prather (chris@prather.org)
+
+  Justin Hunter <justin.d.hunter at gmail dot com>
 
 =head1 COPYRIGHT AND LICENSE
 

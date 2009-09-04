@@ -13,3 +13,5 @@ t/002-attributes.t
 t/003-roles.t
 t/004-traits.t
 t/005-mop.t
+t/006-init_arg.t
+t/007-init_arg-coerce.t
