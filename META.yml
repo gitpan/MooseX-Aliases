@@ -12,4 +12,4 @@ meta-spec:
 name: MooseX-Aliases
 requires:
   Moose: 0.89
-version: 0.02
+version: 0.03

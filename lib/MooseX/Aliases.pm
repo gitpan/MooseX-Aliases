@@ -1,5 +1,5 @@
 package MooseX::Aliases;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Moose ();
 use Moose::Exporter;
@@ -12,7 +12,7 @@ MooseX::Aliases - easy aliasing of methods and attributes in Moose
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 SYNOPSIS
 
@@ -93,7 +93,9 @@ sub alias {
     Moose->throw_error("cannot find method $orig to alias") unless $method;
     $meta->add_method(
         $alias => _get_method_metaclass($method)->wrap(
-            $method,
+            sub { shift->$orig(@_) }, # goto $_[0]->can($orig) ?
+            package_name => $method->package_name,
+            name         => $alias,
             aliased_from => $orig
         )
     );

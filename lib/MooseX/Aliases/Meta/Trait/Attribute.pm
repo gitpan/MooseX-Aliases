@@ -1,5 +1,5 @@
 package MooseX::Aliases::Meta::Trait::Attribute;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Moose::Role;
 use Moose::Util::TypeConstraints;
@@ -11,7 +11,7 @@ MooseX::Aliases::Meta::Trait::Attribute - attribute metaclass trait for L<MooseX
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 SYNOPSIS
 
@@ -54,7 +54,8 @@ after install_accessors => sub {
     for my $alias ($self->alias) {
         $class_meta->add_method(
             $alias => MooseX::Aliases::_get_method_metaclass($orig_meth)->wrap(
-                $orig_meth,
+                sub { shift->$orig_name(@_) }, # goto $_[0]->can($orig_name) ?
+                package_name => $orig_meth->package_name,
                 name         => $alias,
                 aliased_from => $orig_name,
             )

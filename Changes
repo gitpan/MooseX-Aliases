@@ -1,0 +1,12 @@
+Revision history for MooseX::Aliases
+
+0.03  9/08/2009
+    Do aliasing correctly - use late binding so aliases that get overridden in
+    subclasses work properly
+
+0.02  9/03/2009
+    Attribute aliases now also allow the alias to be used as a constructor
+    argument
+
+0.01  8/15/2009
+    Initial release
