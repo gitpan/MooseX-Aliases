@@ -11,5 +11,5 @@ meta-spec:
   version: 1.4
 name: MooseX-Aliases
 requires:
-  Moose: 0.89
-version: 0.03
+  Moose: 0.90
+version: 0.04

@@ -16,3 +16,4 @@ t/004-traits.t
 t/005-mop.t
 t/006-init_arg.t
 t/007-init_arg-coerce.t
+t/008-inherited.t

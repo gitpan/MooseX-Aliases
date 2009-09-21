@@ -1,5 +1,9 @@
 Revision history for MooseX::Aliases
 
+0.04  9/21/2009
+    Aliases should get the package name of the class they're defined in, not
+    of the class where the aliased method is from
+
 0.03  9/08/2009
     Do aliasing correctly - use late binding so aliases that get overridden in
     subclasses work properly

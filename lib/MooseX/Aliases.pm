@@ -1,9 +1,7 @@
 package MooseX::Aliases;
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
-use Moose ();
 use Moose::Exporter;
-use Moose::Util::MetaRole;
 use Scalar::Util qw(blessed);
 
 =head1 NAME
@@ -12,7 +10,7 @@ MooseX::Aliases - easy aliasing of methods and attributes in Moose
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 SYNOPSIS
 
@@ -28,12 +26,12 @@ version 0.03
 
     sub foo { say $self->that }
     alias foo => 'bar';
-    
+
     $o = MyApp->new();
     $o->this('Hello World');
     $o->bar; # prints 'Hello World'
 
-or 
+or
 
     package MyApp::Role;
     use Moose::Role;
@@ -61,7 +59,10 @@ their aliased names.
 
 =cut
 
-Moose::Exporter->setup_import_methods( with_caller => ['alias'] );
+Moose::Exporter->setup_import_methods(
+    with_caller               => ['alias'],
+    attribute_metaclass_roles => ['MooseX::Aliases::Meta::Trait::Attribute'],
+);
 
 sub _get_method_metaclass {
     my ($method) = @_;
@@ -94,22 +95,11 @@ sub alias {
     $meta->add_method(
         $alias => _get_method_metaclass($method)->wrap(
             sub { shift->$orig(@_) }, # goto $_[0]->can($orig) ?
-            package_name => $method->package_name,
+            package_name => $caller,
             name         => $alias,
             aliased_from => $orig
         )
     );
-}
-
-sub init_meta {
-    shift;
-    my %options = @_;
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class                 => $options{for_class},
-        attribute_metaclass_roles =>
-            ['MooseX::Aliases::Meta::Trait::Attribute'],
-    );
-    return Class::MOP::class_of($options{for_class});
 }
 
 =head1 BUGS/CAVEATS
@@ -126,6 +116,8 @@ L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=MooseX-Aliases>.
 =head1 SEE ALSO
 
 L<Moose>
+
+L<Method::Alias>
 
 =head1 SUPPORT
 
