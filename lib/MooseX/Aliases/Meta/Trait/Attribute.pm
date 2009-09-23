@@ -1,5 +1,5 @@
 package MooseX::Aliases::Meta::Trait::Attribute;
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use Moose::Role;
 use Moose::Util::TypeConstraints;
@@ -11,7 +11,7 @@ MooseX::Aliases::Meta::Trait::Attribute - attribute metaclass trait for L<MooseX
 
 =head1 VERSION
 
-version 0.04
+version 0.05
 
 =head1 SYNOPSIS
 
@@ -79,7 +79,7 @@ around initialize_instance_slot => sub {
             push @aliases, $self->init_arg;
         }
 
-        $self->associated_metaclass->throw_error(
+        $self->associated_class->throw_error(
             'Conflicting init_args: (' . join(', ', @aliases) . ')'
         ) if @aliases > 1;
 

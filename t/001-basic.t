@@ -12,7 +12,7 @@ my $subclass = 0;
     use MooseX::Aliases;
 
     sub foo { $called++ }
-    alias foo => 'bar';
+    alias bar => 'foo';
 
     package MyTest::Sub;
     use Moose;

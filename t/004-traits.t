@@ -25,7 +25,7 @@ my ($foo_called, $baz_called, $run_called);
     );
 
     sub run { $run_called++ }
-    alias run => 'walk';
+    alias walk => 'run';
 }
 
 my $t = MyTest->new;

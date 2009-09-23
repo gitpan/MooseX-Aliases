@@ -9,7 +9,7 @@ use Test::More tests => 4;
     use MooseX::Aliases;
 
     sub foo { }
-    alias foo => 'bar';
+    alias bar => 'foo';
 
     has baz => (
         is    => 'ro',

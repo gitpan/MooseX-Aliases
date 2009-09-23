@@ -15,7 +15,7 @@ use Test::More tests => 5;
     use Moose;
     use MooseX::Aliases;
     extends 'Foo';
-    alias foo => 'bar';
+    alias bar => 'foo';
 }
 
 can_ok('Bar', 'bar');

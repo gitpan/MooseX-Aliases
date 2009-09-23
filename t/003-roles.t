@@ -26,7 +26,7 @@ SKIP: {
 }
 
     sub run { $run_called++ }
-    alias run => 'walk';
+    alias walk => 'run';
 }
 
 {
