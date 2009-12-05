@@ -1,5 +1,8 @@
 Revision history for MooseX::Aliases
 
+0.07  12/04/2009
+    Add dep on Test::Exception
+
 0.06  12/04/2009
     Aliased init_args now work for immutable classes.
 

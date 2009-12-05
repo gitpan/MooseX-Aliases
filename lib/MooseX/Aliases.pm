@@ -1,5 +1,5 @@
 package MooseX::Aliases;
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 
 use Moose::Exporter;
@@ -11,12 +11,12 @@ MooseX::Aliases - easy aliasing of methods and attributes in Moose
 
 =head1 VERSION
 
-version 0.06
+version 0.07
 
 =head1 SYNOPSIS
 
     package MyApp;
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 
     use Moose;
@@ -38,7 +38,7 @@ our $VERSION = '0.06';
 or
 
     package MyApp::Role;
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 
     use Moose::Role;
