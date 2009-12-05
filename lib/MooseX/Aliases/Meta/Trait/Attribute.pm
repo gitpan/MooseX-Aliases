@@ -1,5 +1,6 @@
 package MooseX::Aliases::Meta::Trait::Attribute;
-our $VERSION = '0.05';
+our $VERSION = '0.06';
+
 
 use Moose::Role;
 use Moose::Util::TypeConstraints;
@@ -11,11 +12,14 @@ MooseX::Aliases::Meta::Trait::Attribute - attribute metaclass trait for L<MooseX
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 SYNOPSIS
 
     package MyApp::Role;
+our $VERSION = '0.06';
+
+
     use Moose::Role;
     use MooseX::Aliases;
 
@@ -70,12 +74,11 @@ around initialize_instance_slot => sub {
 
     return $self->$orig(@_)
         # don't run if we haven't set any aliases
-        unless $self->has_alias
-            # don't run if init_arg is explicitly undef
-            && (!$self->has_init_arg || defined $self->init_arg);
+        # don't run if init_arg is explicitly undef
+        unless $self->has_alias && $self->has_init_arg;
 
     if (my @aliases = grep { exists $params->{$_} } @{ $self->alias }) {
-        if ($self->has_init_arg and exists $params->{ $self->init_arg }) {
+        if (exists $params->{ $self->init_arg }) {
             push @aliases, $self->init_arg;
         }
 

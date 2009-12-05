@@ -7,6 +7,7 @@ README
 dist.ini
 lib/MooseX/Aliases.pm
 lib/MooseX/Aliases/Meta/Trait/Attribute.pm
+lib/MooseX/Aliases/Meta/Trait/Constructor.pm
 lib/MooseX/Aliases/Meta/Trait/Method.pm
 t/000-load.t
 t/001-basic.t
@@ -20,3 +21,5 @@ t/008-inherited.t
 t/010-errors.t
 t/011-warnings.t
 t/100-synopsis.t
+t/release-pod-coverage.t
+t/release-pod-syntax.t

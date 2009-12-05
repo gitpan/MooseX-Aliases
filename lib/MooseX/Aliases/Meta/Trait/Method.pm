@@ -1,5 +1,6 @@
 package MooseX::Aliases::Meta::Trait::Method;
-our $VERSION = '0.05';
+our $VERSION = '0.06';
+
 
 use Moose::Role;
 
@@ -9,7 +10,7 @@ MooseX::Aliases::Meta::Trait::Method - method metaclass trait for L<MooseX::Alia
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 DESCRIPTION
 

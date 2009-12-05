@@ -1,5 +1,8 @@
 Revision history for MooseX::Aliases
 
+0.06  12/04/2009
+    Aliased init_args now work for immutable classes.
+
 0.05  9/22/2009
     Switched the order of the arguments to the alias function. Existing code
     should continue to work, with a warning, for now. This will be removed

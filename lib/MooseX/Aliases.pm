@@ -1,5 +1,6 @@
 package MooseX::Aliases;
-our $VERSION = '0.05';
+our $VERSION = '0.06';
+
 
 use Moose::Exporter;
 use Scalar::Util qw(blessed);
@@ -10,11 +11,14 @@ MooseX::Aliases - easy aliasing of methods and attributes in Moose
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 SYNOPSIS
 
     package MyApp;
+our $VERSION = '0.06';
+
+
     use Moose;
     use MooseX::Aliases;
 
@@ -34,6 +38,9 @@ version 0.05
 or
 
     package MyApp::Role;
+our $VERSION = '0.06';
+
+
     use Moose::Role;
     use MooseX::Aliases;
 
@@ -63,6 +70,7 @@ their aliased names.
 Moose::Exporter->setup_import_methods(
     with_meta                 => ['alias'],
     attribute_metaclass_roles => ['MooseX::Aliases::Meta::Trait::Attribute'],
+    constructor_class_roles   => ['MooseX::Aliases::Meta::Trait::Constructor'],
 );
 
 sub _get_method_metaclass {

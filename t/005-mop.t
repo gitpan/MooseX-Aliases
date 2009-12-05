@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More tests => 8;
 
 {
     package MyTest;
@@ -17,11 +17,18 @@ use Test::More tests => 4;
     );
 }
 
-my $method = MyTest->meta->get_method('bar');
-ok($method->meta->does_role('MooseX::Aliases::Meta::Trait::Method'),
-   'does the method trait');
-is($method->aliased_from, 'foo', 'bar is aliased from foo');
-my $attr_method = MyTest->meta->get_method('quux');
-ok($attr_method->meta->does_role('MooseX::Aliases::Meta::Trait::Method'),
-   'does the method trait');
-is($attr_method->aliased_from, 'baz', 'quux is aliased from baz');
+{
+    my $method = MyTest->meta->get_method('bar');
+    ok($method->meta->does_role('MooseX::Aliases::Meta::Trait::Method'),
+       'does the method trait');
+    is($method->aliased_from, 'foo', 'bar is aliased from foo');
+    my $attr_method = MyTest->meta->get_method('quux');
+    ok($attr_method->meta->does_role('MooseX::Aliases::Meta::Trait::Method'),
+       'does the method trait');
+    is($attr_method->aliased_from, 'baz', 'quux is aliased from baz');
+
+    if (MyTest->meta->is_mutable) {
+        MyTest->meta->make_immutable;
+        redo;
+    }
+}

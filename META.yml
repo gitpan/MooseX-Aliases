@@ -4,7 +4,7 @@ author:
   - 'Jesse Luehrs <doy at tozt dot net>'
   - 'Chris Prather <chris@prather.org>'
   - 'Justin Hunter <justin.d.hunter at gmail dot com>'
-generated_by: 'Dist::Zilla::Plugin::MetaYAML version 1.091440'
+generated_by: 'Dist::Zilla version 1.093220'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -12,4 +12,4 @@ meta-spec:
 name: MooseX-Aliases
 requires:
   Moose: 0.90
-version: 0.05
+version: 0.06

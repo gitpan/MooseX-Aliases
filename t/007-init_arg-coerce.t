@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 12;
+use Test::More tests => 24;
 
 {
     package MyTest;
@@ -28,26 +28,37 @@ use Test::More tests => 12;
     );
 }
 
-my $test1 = MyTest->new(foo => -1, baz => -3);
-is($test1->foo, 1, 'Attribute set with default init_arg');
-is($test1->baz, undef, 'Attribute set with default init_arg (undef)');
+{
+    my $test1 = MyTest->new(foo => -1, baz => -3);
+    is($test1->foo, 1, 'Attribute set with default init_arg');
+    is($test1->baz, undef, 'Attribute set with default init_arg (undef)');
 
-$test1->baz(-3);
-is($test1->baz, 3, 'Attribute set with default writer, read with default reader');
-is($test1->quux, 3, 'Attribute set with default writer, read with aliased reader');
+    $test1->baz(-3);
+    is($test1->baz, 3,
+       'Attribute set with default writer, read with default reader');
+    is($test1->quux, 3,
+       'Attribute set with default writer, read with aliased reader');
 
-$test1->quux(4);
-is($test1->baz, 4, 'Attribute set with aliased writer');
-is($test1->quux, 4, 'Attribute set with aliased writer');
+    $test1->quux(4);
+    is($test1->baz, 4, 'Attribute set with aliased writer');
+    is($test1->quux, 4, 'Attribute set with aliased writer');
 
-my $test2 = MyTest->new(bar => -1, baz => -3);
-is($test2->foo, 1, 'Attribute set wtih aliased init_arg');
-is($test2->baz, undef, 'Attribute set with default init_arg (undef)');
+    my $test2 = MyTest->new(bar => -1, baz => -3);
+    is($test2->foo, 1, 'Attribute set wtih aliased init_arg');
+    is($test2->baz, undef, 'Attribute set with default init_arg (undef)');
 
-$test2->baz(-3);
-is($test2->baz, 3, 'Attribute set with default writer, read with default reader');
-is($test2->quux, 3, 'Attribute set with default writer, read with aliased reader');
+    $test2->baz(-3);
+    is($test2->baz, 3,
+       'Attribute set with default writer, read with default reader');
+    is($test2->quux, 3,
+       'Attribute set with default writer, read with aliased reader');
 
-$test2->quux(-4);
-is($test2->baz, 4, 'Attribute set with aliased writer');
-is($test2->quux, 4, 'Attribute set with aliased writer');
+    $test2->quux(-4);
+    is($test2->baz, 4, 'Attribute set with aliased writer');
+    is($test2->quux, 4, 'Attribute set with aliased writer');
+
+    if (MyTest->meta->is_mutable) {
+        MyTest->meta->make_immutable;
+        redo;
+    }
+}
