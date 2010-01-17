@@ -1,7 +1,5 @@
 package MooseX::Aliases::Meta::Trait::Attribute;
-our $VERSION = '0.07';
-
-
+our $VERSION = '0.08';
 use Moose::Role;
 use Moose::Util::TypeConstraints;
 Moose::Util::meta_attribute_alias 'Aliased';
@@ -12,14 +10,11 @@ MooseX::Aliases::Meta::Trait::Attribute - attribute metaclass trait for L<MooseX
 
 =head1 VERSION
 
-version 0.07
+version 0.08
 
 =head1 SYNOPSIS
 
     package MyApp::Role;
-our $VERSION = '0.07';
-
-
     use Moose::Role;
     use MooseX::Aliases;
 

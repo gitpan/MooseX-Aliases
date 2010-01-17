@@ -1,7 +1,5 @@
 package MooseX::Aliases::Meta::Trait::Constructor;
-our $VERSION = '0.07';
-
-
+our $VERSION = '0.08';
 use Moose::Role;
 
 =head1 NAME
@@ -10,7 +8,7 @@ MooseX::Aliases::Meta::Trait::Constructor - constructor metaclass trait for L<Mo
 
 =head1 VERSION
 
-version 0.07
+version 0.08
 
 =head1 DESCRIPTION
 
