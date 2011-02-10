@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 use Test::More tests => 28;
+use Test::Moose;
 
 {
     package MyTest;
@@ -20,7 +21,7 @@ use Test::More tests => 28;
     );
 }
 
-{
+with_immutable {
     my $test1 = MyTest->new(foo => 'foo', baz => 'baz');
     is($test1->foo, 'foo', 'Attribute set with default init_arg');
     is($test1->baz, undef, 'Attribute set with default init_arg (undef)');
@@ -54,9 +55,4 @@ use Test::More tests => 28;
 
     my $baz = MyTest->meta->find_attribute_by_name('baz');
     is($baz->init_arg, undef, 'Attribute has correct init_arg');
-
-    if (MyTest->meta->is_mutable) {
-        MyTest->meta->make_immutable;
-        redo;
-    }
-}
+} 'MyTest';

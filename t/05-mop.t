@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 use Test::More tests => 8;
+use Test::Moose;
 
 {
     package MyTest;
@@ -17,7 +18,7 @@ use Test::More tests => 8;
     );
 }
 
-{
+with_immutable {
     my $method = MyTest->meta->get_method('bar');
     ok($method->meta->does_role('MooseX::Aliases::Meta::Trait::Method'),
        'does the method trait');
@@ -26,9 +27,4 @@ use Test::More tests => 8;
     ok($attr_method->meta->does_role('MooseX::Aliases::Meta::Trait::Method'),
        'does the method trait');
     is($attr_method->aliased_from, 'baz', 'quux is aliased from baz');
-
-    if (MyTest->meta->is_mutable) {
-        MyTest->meta->make_immutable;
-        redo;
-    }
-}
+} 'MyTest';

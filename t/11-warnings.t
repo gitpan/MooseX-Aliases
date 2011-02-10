@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 use Test::More;
+use Test::Moose;
 BEGIN {
     eval "use Test::Output;";
     plan skip_all => "Test::Output is required for this test" if $@;
@@ -18,13 +19,8 @@ BEGIN {
                 "got a proper deprecation warning";
 }
 
-{
+with_immutable {
     can_ok('Foo', 'bar');
     is(Foo->meta->get_method('bar')->aliased_from, 'foo',
        "it's the right alias");
-
-    if (Foo->meta->is_mutable) {
-        Foo->meta->make_immutable;
-        redo;
-    }
-}
+} 'Foo';

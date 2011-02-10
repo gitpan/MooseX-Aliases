@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 use Test::More tests => 10;
+use Test::Moose;
 
 {
     package Foo;
@@ -18,7 +19,7 @@ use Test::More tests => 10;
     alias bar => 'foo';
 }
 
-{
+with_immutable {
     can_ok('Bar', 'bar');
     my $bar_method = Bar->meta->get_method('bar');
     is($bar_method->package_name, 'Bar',
@@ -30,10 +31,4 @@ use Test::More tests => 10;
        'aliased_from method has the correct package');
     is($foo_method->original_package_name, 'Foo',
        'aliased_from method has the correct original package');
-
-    if (Foo->meta->is_mutable) {
-        Foo->meta->make_immutable;
-        Bar->meta->make_immutable;
-        redo;
-    }
-}
+} 'Foo', 'Bar';

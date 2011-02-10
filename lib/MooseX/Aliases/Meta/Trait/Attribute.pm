@@ -1,38 +1,12 @@
 package MooseX::Aliases::Meta::Trait::Attribute;
-our $VERSION = '0.08';
+BEGIN {
+  $MooseX::Aliases::Meta::Trait::Attribute::VERSION = '0.09';
+}
 use Moose::Role;
 use Moose::Util::TypeConstraints;
 Moose::Util::meta_attribute_alias 'Aliased';
+# ABSTRACT: attribute metaclass trait for L<MooseX::Aliases>
 
-=head1 NAME
-
-MooseX::Aliases::Meta::Trait::Attribute - attribute metaclass trait for L<MooseX::Aliases>
-
-=head1 VERSION
-
-version 0.08
-
-=head1 SYNOPSIS
-
-    package MyApp::Role;
-    use Moose::Role;
-    use MooseX::Aliases;
-
-    has this => (
-        isa   => 'Str',
-        is    => 'rw',
-        traits => [qw(Aliased)],
-        alias => 'that',
-    );
-
-=head1 DESCRIPTION
-
-This trait adds the C<alias> option to attribute creation. It is automatically
-applied to all attributes when C<use MooseX::Aliases;> is run, but must be
-explicitly applied in roles, due to issues with Moose's handling of attributes
-in roles.
-
-=cut
 
 subtype 'MooseX::Aliases::ArrayRef', as 'ArrayRef[Str]';
 coerce  'MooseX::Aliases::ArrayRef', from 'Str', via { [$_] };
@@ -89,21 +63,70 @@ around initialize_instance_slot => sub {
 
 no Moose::Role;
 
+1;
+
+__END__
+=pod
+
+=head1 NAME
+
+MooseX::Aliases::Meta::Trait::Attribute - attribute metaclass trait for L<MooseX::Aliases>
+
+=head1 VERSION
+
+version 0.09
+
+=head1 SYNOPSIS
+
+    package MyApp::Role;
+    use Moose::Role;
+    use MooseX::Aliases;
+
+    has this => (
+        isa   => 'Str',
+        is    => 'rw',
+        alias => 'that',
+    );
+
+=head1 DESCRIPTION
+
+This trait adds the C<alias> option to attribute creation. It is automatically
+applied to all attributes when C<use MooseX::Aliases;> is run.
+
+=head1 SEE ALSO
+
+=over 4
+
+=item *
+
+L<MooseX::Aliases>
+
+=back
+
 =head1 AUTHORS
 
-  Jesse Luehrs <doy at tozt dot net>
+=over 4
 
-  Chris Prather (chris@prather.org)
+=item *
 
-  Justin Hunter <justin.d.hunter at gmail dot com>
+Jesse Luehrs <doy at tozt dot net>
+
+=item *
+
+Chris Prather <chris@prather.org>
+
+=item *
+
+Justin Hunter <justin.d.hunter at gmail dot com>
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2009 by Jesse Luehrs.
+This software is copyright (c) 2011 by Jesse Luehrs.
 
 This is free software; you can redistribute it and/or modify it under
-the same terms as perl itself.
+the same terms as the Perl 5 programming language system itself.
 
 =cut
 
-1;

@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 use Test::More tests => 6;
+use Test::Moose;
+use Test::Requires { Moose => 1.9900 };
 
 my ($foo_called, $baz_called, $run_called);
 
@@ -10,8 +12,6 @@ my ($foo_called, $baz_called, $run_called);
     use Moose::Role;
     use MooseX::Aliases;
 
-SKIP: {
-    ::skip q[roles don't have attribute metaclasses], 0;
     has foo => (
         is      => 'rw',
         alias   => 'bar',
@@ -23,7 +23,6 @@ SKIP: {
         alias   => [qw/quux quuux/],
         trigger => sub { $baz_called++ },
     );
-}
 
     sub run { $run_called++ }
     alias walk => 'run';
@@ -35,27 +34,17 @@ SKIP: {
     with 'MyTestRole';
 }
 
-{
+with_immutable {
+    ($foo_called, $baz_called, $run_called) = (0, 0, 0);
     my $t = MyTest->new;
-    SKIP: {
-        skip q[roles don't have attribute metaclasses], 2;
-        $t->foo(1);
-        $t->bar(1);
-        $t->baz(1);
-        $t->quux(1);
-        $t->quuux(1);
-        is($foo_called, 2, 'all aliased methods were called from foo');
-        is($baz_called, 3, 'all aliased methods were called from baz');
-    }
+    $t->foo(1);
+    $t->bar(1);
+    $t->baz(1);
+    $t->quux(1);
+    $t->quuux(1);
+    is($foo_called, 2, 'all aliased methods were called from foo');
+    is($baz_called, 3, 'all aliased methods were called from baz');
     $t->run;
     $t->walk;
     is($run_called, 2, 'all aliased methods were called from run');
-
-    if (MyTest->meta->is_mutable) {
-        MyTest->meta->make_immutable;
-        $foo_called = 0;
-        $baz_called = 0;
-        $run_called = 0;
-        redo;
-    }
-}
+} 'MyTest';

@@ -1,8 +1,86 @@
 package MooseX::Aliases;
-our $VERSION = '0.08';
+BEGIN {
+  $MooseX::Aliases::VERSION = '0.09';
+}
 use Moose ();
 use Moose::Exporter;
 use Scalar::Util qw(blessed);
+# ABSTRACT: easy aliasing of methods and attributes in Moose
+
+
+my %metaroles;
+if ($Moose::VERSION >= 1.9900) {
+    %metaroles = (
+        class_metaroles => {
+            attribute => ['MooseX::Aliases::Meta::Trait::Attribute'],
+            class     => ['MooseX::Aliases::Meta::Trait::Class'],
+        },
+        role_metaroles => {
+            applied_attribute => ['MooseX::Aliases::Meta::Trait::Attribute'],
+        }
+    );
+}
+else {
+    %metaroles = (
+        class_metaroles => {
+            attribute   => ['MooseX::Aliases::Meta::Trait::Attribute'],
+            constructor => ['MooseX::Aliases::Meta::Trait::Constructor'],
+        },
+    );
+}
+
+Moose::Exporter->setup_import_methods(
+    with_meta => ['alias'],
+    %metaroles,
+);
+
+sub _get_method_metaclass {
+    my ($method) = @_;
+
+    my $meta = Class::MOP::class_of($method);
+    if ($meta->can('does_role')
+     && $meta->does_role('MooseX::Aliases::Meta::Trait::Method')) {
+        return blessed($method);
+    }
+    else {
+        return Moose::Meta::Class->create_anon_class(
+            superclasses => [blessed($method)],
+            roles        => ['MooseX::Aliases::Meta::Trait::Method'],
+            cache        => 1,
+        )->name;
+    }
+}
+
+
+sub alias {
+    my ( $meta, $alias, $orig ) = @_;
+    my $method = $meta->find_method_by_name($orig);
+    if (!$method) {
+        $method = $meta->find_method_by_name($alias);
+        if ($method) {
+            Carp::cluck(
+                q["alias $from => $to" is deprecated, please use ]
+              . q["alias $to => $from"]
+            );
+            ($alias, $orig) = ($orig, $alias);
+        }
+    }
+    Moose->throw_error("Cannot find method $orig to alias") unless $method;
+    $meta->add_method(
+        $alias => _get_method_metaclass($method)->wrap(
+            sub { shift->$orig(@_) }, # goto $_[0]->can($orig) ?
+            package_name => $meta->name,
+            name         => $alias,
+            aliased_from => $orig
+        )
+    );
+}
+
+
+1;
+
+__END__
+=pod
 
 =head1 NAME
 
@@ -10,7 +88,7 @@ MooseX::Aliases - easy aliasing of methods and attributes in Moose
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 SYNOPSIS
 
@@ -40,7 +118,6 @@ or
     has this => (
         isa   => 'Str',
         is    => 'rw',
-        traits => [qw(Aliased)],
         alias => 'that',
     );
 
@@ -54,82 +131,13 @@ provides an alias parameter for C<has()> to generate aliased accessors as well
 as the standard ones. Attributes can also be initialized in the constructor via
 their aliased names.
 
-=cut
-
-=head1 EXPORTS
-
-=cut
-
-my %metaroles = $Moose::VERSION >= 0.9301
-    ? (
-    class_metaroles => {
-        attribute   => ['MooseX::Aliases::Meta::Trait::Attribute'],
-        constructor => ['MooseX::Aliases::Meta::Trait::Constructor'],
-    }
-    )
-    : (
-    attribute_metaclass_roles => ['MooseX::Aliases::Meta::Trait::Attribute'],
-    constructor_class_roles => ['MooseX::Aliases::Meta::Trait::Constructor'],
-    );
-
-Moose::Exporter->setup_import_methods(
-    with_meta => ['alias'],
-    %metaroles,
-);
-
-sub _get_method_metaclass {
-    my ($method) = @_;
-
-    my $meta = Class::MOP::class_of($method);
-    if ($meta->can('does_role')
-     && $meta->does_role('MooseX::Aliases::Meta::Trait::Method')) {
-        return blessed($method);
-    }
-    else {
-        return Moose::Meta::Class->create_anon_class(
-            superclasses => [blessed($method)],
-            roles        => ['MooseX::Aliases::Meta::Trait::Method'],
-            cache        => 1,
-        )->name;
-    }
-}
+=head1 FUNCTIONS
 
 =head2 alias ALIAS METHODNAME
 
 Installs ALIAS as a method that is aliased to the method METHODNAME.
 
-=cut
-
-sub alias {
-    my ( $meta, $alias, $orig ) = @_;
-    my $method = $meta->find_method_by_name($orig);
-    if (!$method) {
-        $method = $meta->find_method_by_name($alias);
-        if ($method) {
-            Carp::cluck(
-                q["alias $from => $to" is deprecated, please use ]
-              . q["alias $to => $from"]
-            );
-            ($alias, $orig) = ($orig, $alias);
-        }
-    }
-    Moose->throw_error("Cannot find method $orig to alias") unless $method;
-    $meta->add_method(
-        $alias => _get_method_metaclass($method)->wrap(
-            sub { shift->$orig(@_) }, # goto $_[0]->can($orig) ?
-            package_name => $meta->name,
-            name         => $alias,
-            aliased_from => $orig
-        )
-    );
-}
-
-=head1 BUGS/CAVEATS
-
-Currently, to use MooseX::Aliased in a role, you will need to explicitly
-associate the metaclass trait with your attribute. This is because Moose won't
-automatically apply metaclass traits to attributes in roles. The example in
-L<SYNOPSIS> should work.
+=head1 CAVEATS
 
 The order of arguments for the C<alias> method has changed (as of version
 0.05). I think the new order makes more sense, and it will make future
@@ -138,15 +146,27 @@ a deprecation warning), unless you were relying on being able to override an
 existing method with an alias - this will now override in the other direction.
 The old argument order will be removed in a future release.
 
+=head1 BUGS
+
+No known bugs.
+
 Please report any bugs through RT: email
 C<bug-moosex-aliases at rt.cpan.org>, or browse to
 L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=MooseX-Aliases>.
 
 =head1 SEE ALSO
 
+=over 4
+
+=item *
+
 L<Moose>
 
+=item *
+
 L<Method::Alias>
+
+=back
 
 =head1 SUPPORT
 
@@ -178,19 +198,28 @@ L<http://search.cpan.org/dist/MooseX-Aliases>
 
 =head1 AUTHORS
 
-  Jesse Luehrs <doy at tozt dot net>
+=over 4
 
-  Chris Prather (chris@prather.org)
+=item *
 
-  Justin Hunter <justin.d.hunter at gmail dot com>
+Jesse Luehrs <doy at tozt dot net>
+
+=item *
+
+Chris Prather <chris@prather.org>
+
+=item *
+
+Justin Hunter <justin.d.hunter at gmail dot com>
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2009 by Jesse Luehrs.
+This software is copyright (c) 2011 by Jesse Luehrs.
 
 This is free software; you can redistribute it and/or modify it under
-the same terms as perl itself.
+the same terms as the Perl 5 programming language system itself.
 
 =cut
 
-1;

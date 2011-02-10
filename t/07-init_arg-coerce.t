@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 use Test::More tests => 24;
+use Test::Moose;
 
 {
     package MyTest;
@@ -28,7 +29,7 @@ use Test::More tests => 24;
     );
 }
 
-{
+with_immutable {
     my $test1 = MyTest->new(foo => -1, baz => -3);
     is($test1->foo, 1, 'Attribute set with default init_arg');
     is($test1->baz, undef, 'Attribute set with default init_arg (undef)');
@@ -56,9 +57,4 @@ use Test::More tests => 24;
     $test2->quux(-4);
     is($test2->baz, 4, 'Attribute set with aliased writer');
     is($test2->quux, 4, 'Attribute set with aliased writer');
-
-    if (MyTest->meta->is_mutable) {
-        MyTest->meta->make_immutable;
-        redo;
-    }
-}
+} 'MyTest';
