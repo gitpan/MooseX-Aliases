@@ -1,18 +1,13 @@
-package MooseX::Aliases::Meta::Trait::Method;
+package MooseX::Aliases::Meta::Trait::Role;
 BEGIN {
-  $MooseX::Aliases::Meta::Trait::Method::VERSION = '0.10';
+  $MooseX::Aliases::Meta::Trait::Role::VERSION = '0.10';
 }
 use Moose::Role;
-# ABSTRACT: method metaclass trait for L<MooseX::Aliases>
 
-
-
-has aliased_from => (
-    is  => 'ro',
-    isa => 'Str',
-);
+sub composition_class_roles { 'MooseX::Aliases::Meta::Trait::Role::Composite' }
 
 no Moose::Role;
+
 
 1;
 
@@ -21,21 +16,13 @@ __END__
 
 =head1 NAME
 
-MooseX::Aliases::Meta::Trait::Method - method metaclass trait for L<MooseX::Aliases>
+MooseX::Aliases::Meta::Trait::Role
 
 =head1 VERSION
 
 version 0.10
 
-=head1 DESCRIPTION
-
-This trait adds an attribute to metaclasses of aliased methods, to track which method they were aliased from.
-
-=head1 METHODS
-
-=head2 aliased_from
-
-Returns the name of the method that this method is an alias of.
+=for Pod::Coverage composition_class_roles
 
 =head1 SEE ALSO
 

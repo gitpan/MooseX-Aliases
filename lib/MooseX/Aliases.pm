@@ -1,6 +1,6 @@
 package MooseX::Aliases;
 BEGIN {
-  $MooseX::Aliases::VERSION = '0.09';
+  $MooseX::Aliases::VERSION = '0.10';
 }
 use Moose ();
 use Moose::Exporter;
@@ -8,25 +8,29 @@ use Scalar::Util qw(blessed);
 # ABSTRACT: easy aliasing of methods and attributes in Moose
 
 
-my %metaroles;
-if ($Moose::VERSION >= 1.9900) {
-    %metaroles = (
-        class_metaroles => {
-            attribute => ['MooseX::Aliases::Meta::Trait::Attribute'],
-            class     => ['MooseX::Aliases::Meta::Trait::Class'],
-        },
-        role_metaroles => {
-            applied_attribute => ['MooseX::Aliases::Meta::Trait::Attribute'],
-        }
-    );
+my %metaroles = (
+    class_metaroles => {
+        attribute => ['MooseX::Aliases::Meta::Trait::Attribute'],
+    },
+    role_metaroles => {
+        role =>
+            ['MooseX::Aliases::Meta::Trait::Role'],
+        application_to_class =>
+            ['MooseX::Aliases::Meta::Trait::Role::ApplicationToClass'],
+        application_to_role =>
+            ['MooseX::Aliases::Meta::Trait::Role::ApplicationToRole'],
+    },
+);
+
+if (Moose->VERSION >= 1.9900) {
+    $metaroles{class_metaroles}{class} =
+        ['MooseX::Aliases::Meta::Trait::Class'];
+    $metaroles{role_metaroles}{applied_attribute} =
+        ['MooseX::Aliases::Meta::Trait::Attribute'];
 }
 else {
-    %metaroles = (
-        class_metaroles => {
-            attribute   => ['MooseX::Aliases::Meta::Trait::Attribute'],
-            constructor => ['MooseX::Aliases::Meta::Trait::Constructor'],
-        },
-    );
+    $metaroles{class_metaroles}{constructor} =
+        ['MooseX::Aliases::Meta::Trait::Constructor'];
 }
 
 Moose::Exporter->setup_import_methods(
@@ -88,7 +92,7 @@ MooseX::Aliases - easy aliasing of methods and attributes in Moose
 
 =head1 VERSION
 
-version 0.09
+version 0.10
 
 =head1 SYNOPSIS
 
@@ -130,6 +134,12 @@ The MooseX::Aliases module will allow you to quickly alias methods in Moose. It
 provides an alias parameter for C<has()> to generate aliased accessors as well
 as the standard ones. Attributes can also be initialized in the constructor via
 their aliased names.
+
+You can create more than one alias at once by passing a listref:
+
+    has ip_addr => (
+        alias => [ qw(ipAddr ip) ],
+    );
 
 =head1 FUNCTIONS
 

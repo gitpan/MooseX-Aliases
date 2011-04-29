@@ -11,6 +11,10 @@ lib/MooseX/Aliases/Meta/Trait/Attribute.pm
 lib/MooseX/Aliases/Meta/Trait/Class.pm
 lib/MooseX/Aliases/Meta/Trait/Constructor.pm
 lib/MooseX/Aliases/Meta/Trait/Method.pm
+lib/MooseX/Aliases/Meta/Trait/Role.pm
+lib/MooseX/Aliases/Meta/Trait/Role/ApplicationToClass.pm
+lib/MooseX/Aliases/Meta/Trait/Role/ApplicationToRole.pm
+lib/MooseX/Aliases/Meta/Trait/Role/Composite.pm
 t/00-compile.t
 t/01-basic.t
 t/02-attributes.t
@@ -22,6 +26,7 @@ t/07-init_arg-coerce.t
 t/08-inherited.t
 t/10-errors.t
 t/11-warnings.t
+t/12-roles-init_arg.t
 t/50-synopsis.t
 t/release-eol.t
 t/release-no-tabs.t

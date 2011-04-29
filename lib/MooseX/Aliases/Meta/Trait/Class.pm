@@ -1,6 +1,6 @@
 package MooseX::Aliases::Meta::Trait::Class;
 BEGIN {
-  $MooseX::Aliases::Meta::Trait::Class::VERSION = '0.09';
+  $MooseX::Aliases::Meta::Trait::Class::VERSION = '0.10';
 }
 use Moose::Role;
 # ABSTRACT: class metaclass trait for L<MooseX::Aliases>
@@ -53,7 +53,7 @@ MooseX::Aliases::Meta::Trait::Class - class metaclass trait for L<MooseX::Aliase
 
 =head1 VERSION
 
-version 0.09
+version 0.10
 
 =head1 DESCRIPTION
 
