@@ -1,10 +1,11 @@
 package MooseX::Aliases::Meta::Trait::Class;
 BEGIN {
-  $MooseX::Aliases::Meta::Trait::Class::VERSION = '0.10';
+  $MooseX::Aliases::Meta::Trait::Class::AUTHORITY = 'cpan:DOY';
+}
+{
+  $MooseX::Aliases::Meta::Trait::Class::VERSION = '0.11';
 }
 use Moose::Role;
-# ABSTRACT: class metaclass trait for L<MooseX::Aliases>
-
 
 around _inline_slot_initializer => sub {
     my $orig = shift;
@@ -42,58 +43,8 @@ around _inline_slot_initializer => sub {
 
 no Moose::Role;
 
-1;
-
-__END__
-=pod
-
-=head1 NAME
-
-MooseX::Aliases::Meta::Trait::Class - class metaclass trait for L<MooseX::Aliases>
-
-=head1 VERSION
-
-version 0.10
-
-=head1 DESCRIPTION
-
-This trait adds the handling of aliased C<init_arg>s for inlined constructors
-(for immutable classes).
-
-=head1 SEE ALSO
-
-=over 4
-
-=item *
-
-L<MooseX::Aliases>
-
-=back
-
-=head1 AUTHORS
-
-=over 4
-
-=item *
-
-Jesse Luehrs <doy at tozt dot net>
-
-=item *
-
-Chris Prather <chris@prather.org>
-
-=item *
-
-Justin Hunter <justin.d.hunter at gmail dot com>
-
-=back
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2011 by Jesse Luehrs.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
+=for Pod::Coverage
 
 =cut
 
+1;

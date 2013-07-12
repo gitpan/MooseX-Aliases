@@ -1,8 +1,11 @@
 package MooseX::Aliases;
 BEGIN {
-  $MooseX::Aliases::VERSION = '0.10';
+  $MooseX::Aliases::AUTHORITY = 'cpan:DOY';
 }
-use Moose ();
+{
+  $MooseX::Aliases::VERSION = '0.11';
+}
+use Moose 2.0000 ();
 use Moose::Exporter;
 use Scalar::Util qw(blessed);
 # ABSTRACT: easy aliasing of methods and attributes in Moose
@@ -10,6 +13,7 @@ use Scalar::Util qw(blessed);
 
 my %metaroles = (
     class_metaroles => {
+        class     => ['MooseX::Aliases::Meta::Trait::Class'],
         attribute => ['MooseX::Aliases::Meta::Trait::Attribute'],
     },
     role_metaroles => {
@@ -19,19 +23,10 @@ my %metaroles = (
             ['MooseX::Aliases::Meta::Trait::Role::ApplicationToClass'],
         application_to_role =>
             ['MooseX::Aliases::Meta::Trait::Role::ApplicationToRole'],
+        applied_attribute =>
+            ['MooseX::Aliases::Meta::Trait::Attribute'],
     },
 );
-
-if (Moose->VERSION >= 1.9900) {
-    $metaroles{class_metaroles}{class} =
-        ['MooseX::Aliases::Meta::Trait::Class'];
-    $metaroles{role_metaroles}{applied_attribute} =
-        ['MooseX::Aliases::Meta::Trait::Attribute'];
-}
-else {
-    $metaroles{class_metaroles}{constructor} =
-        ['MooseX::Aliases::Meta::Trait::Constructor'];
-}
 
 Moose::Exporter->setup_import_methods(
     with_meta => ['alias'],
@@ -84,6 +79,7 @@ sub alias {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -92,7 +88,7 @@ MooseX::Aliases - easy aliasing of methods and attributes in Moose
 
 =head1 VERSION
 
-version 0.10
+version 0.11
 
 =head1 SYNOPSIS
 
@@ -135,7 +131,7 @@ provides an alias parameter for C<has()> to generate aliased accessors as well
 as the standard ones. Attributes can also be initialized in the constructor via
 their aliased names.
 
-You can create more than one alias at once by passing a listref:
+You can create more than one alias at once by passing a arrayref:
 
     has ip_addr => (
         alias => [ qw(ipAddr ip) ],
@@ -147,36 +143,75 @@ You can create more than one alias at once by passing a listref:
 
 Installs ALIAS as a method that is aliased to the method METHODNAME.
 
-=head1 CAVEATS
+=head1 ALIASING VERSUS OTHER MOOSE FEATURES
 
-The order of arguments for the C<alias> method has changed (as of version
-0.05). I think the new order makes more sense, and it will make future
-refactoring I have in mind easier. The old order still works (although it gives
-a deprecation warning), unless you were relying on being able to override an
-existing method with an alias - this will now override in the other direction.
-The old argument order will be removed in a future release.
+=head2 Aliasing versus inheritance
+
+    {
+        package Parent;
+        use Moose;
+        use MooseX::Aliases;
+        sub method1 { "A" }
+        alias method2 => "method1";
+    }
+
+    {
+        package Child1;
+        use Moose;
+        extends "Parent";
+        sub method1 { "B" }
+    }
+
+    {
+        package Child2;
+        use Moose;
+        extends "Parent";
+        sub method2 { "C" }
+    }
+
+In the example above, Child1 overrides the method using its
+original name (C<method1>). As a result, calling C<method1> or
+C<method2> returns "B". Child2 overrides the method using its
+alias (C<method2>). As a result, calling C<method2> returns "C",
+but calling C<method1> falls through to the parent class, so
+returns "A".
+
+=head2 Aliasing versus method modifiers
+
+    {
+        package Class1;
+        use Moose;
+        use MooseX::Aliases;
+        sub method1 { "A" }
+        alias method2 => "method1";
+        around method1 => sub { "B" };
+    }
+
+    {
+        package Class2;
+        use Moose;
+        use MooseX::Aliases;
+        sub method1 { "A" }
+        alias method2 => "method1";
+        around method2 => sub { "B" };
+    }
+
+In the example above, Class1's around modifier modifies the
+method using its original name. As a result, both C<method1>
+and C<method2> return "B". Class2's around modifier modifies
+the alias, so C<method2> returns "B", but C<method1> continues
+to return "A".
 
 =head1 BUGS
 
 No known bugs.
 
-Please report any bugs through RT: email
-C<bug-moosex-aliases at rt.cpan.org>, or browse to
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=MooseX-Aliases>.
+Please report any bugs to GitHub Issues at
+L<https://github.com/doy/moosex-aliases/issues>.
 
 =head1 SEE ALSO
 
-=over 4
-
-=item *
-
-L<Moose>
-
-=item *
-
 L<Method::Alias>
-
-=back
 
 =head1 SUPPORT
 
@@ -188,21 +223,21 @@ You can also look for information at:
 
 =over 4
 
-=item * AnnoCPAN: Annotated CPAN documentation
+=item * MetaCPAN
 
-L<http://annocpan.org/dist/MooseX-Aliases>
+L<https://metacpan.org/release/MooseX-Aliases>
 
-=item * CPAN Ratings
+=item * Github
 
-L<http://cpanratings.perl.org/d/MooseX-Aliases>
+L<https://github.com/doy/moosex-aliases>
 
 =item * RT: CPAN's request tracker
 
 L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=MooseX-Aliases>
 
-=item * Search CPAN
+=item * CPAN Ratings
 
-L<http://search.cpan.org/dist/MooseX-Aliases>
+L<http://cpanratings.perl.org/d/MooseX-Aliases>
 
 =back
 
@@ -212,7 +247,7 @@ L<http://search.cpan.org/dist/MooseX-Aliases>
 
 =item *
 
-Jesse Luehrs <doy at tozt dot net>
+Jesse Luehrs <doy@tozt.net>
 
 =item *
 
@@ -220,16 +255,15 @@ Chris Prather <chris@prather.org>
 
 =item *
 
-Justin Hunter <justin.d.hunter at gmail dot com>
+Justin Hunter <justin.d.hunter@gmail.com>
 
 =back
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by Jesse Luehrs.
+This software is copyright (c) 2013 by Jesse Luehrs.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

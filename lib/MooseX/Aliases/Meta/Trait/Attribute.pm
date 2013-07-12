@@ -1,6 +1,9 @@
 package MooseX::Aliases::Meta::Trait::Attribute;
 BEGIN {
-  $MooseX::Aliases::Meta::Trait::Attribute::VERSION = '0.10';
+  $MooseX::Aliases::Meta::Trait::Attribute::AUTHORITY = 'cpan:DOY';
+}
+{
+  $MooseX::Aliases::Meta::Trait::Attribute::VERSION = '0.11';
 }
 use Moose::Role;
 use Moose::Util::TypeConstraints;
@@ -66,6 +69,7 @@ no Moose::Role;
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -74,7 +78,7 @@ MooseX::Aliases::Meta::Trait::Attribute - attribute metaclass trait for L<MooseX
 
 =head1 VERSION
 
-version 0.10
+version 0.11
 
 =head1 SYNOPSIS
 
@@ -93,23 +97,13 @@ version 0.10
 This trait adds the C<alias> option to attribute creation. It is automatically
 applied to all attributes when C<use MooseX::Aliases;> is run.
 
-=head1 SEE ALSO
-
-=over 4
-
-=item *
-
-L<MooseX::Aliases>
-
-=back
-
 =head1 AUTHORS
 
 =over 4
 
 =item *
 
-Jesse Luehrs <doy at tozt dot net>
+Jesse Luehrs <doy@tozt.net>
 
 =item *
 
@@ -117,16 +111,15 @@ Chris Prather <chris@prather.org>
 
 =item *
 
-Justin Hunter <justin.d.hunter at gmail dot com>
+Justin Hunter <justin.d.hunter@gmail.com>
 
 =back
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by Jesse Luehrs.
+This software is copyright (c) 2013 by Jesse Luehrs.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
